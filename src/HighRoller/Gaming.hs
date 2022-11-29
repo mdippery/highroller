@@ -13,6 +13,7 @@ module HighRoller.Gaming
     die,
 
     -- * Properties
+    sides,
     range,
     expected,
 
@@ -121,15 +122,13 @@ expected d =
   let (lb, ub) = range d
    in (fromIntegral lb + fromIntegral ub) / 2
 
+-- | Number of sides of a given die.
+sides :: Die -> Int
+sides = read . tail . show
+
 -- | Closed interval of possible rolls for a given die.
 range :: Die -> (Int, Int)
-range D4   = (1, 4)
-range D6   = (1, 6)
-range D8   = (1, 8)
-range D10  = (1, 10)
-range D12  = (1, 12)
-range D20  = (1, 20)
-range D100 = (1, 100)
+range = ((,) 1) . sides
 
 -- | Simulates a dice roll and returns the result.
 roll

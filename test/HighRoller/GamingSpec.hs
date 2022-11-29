@@ -23,6 +23,16 @@ spec = do
       (isNothing . die) "blah" `shouldBe` True
       (isNothing . die) "D4" `shouldBe` True
 
+  describe "sides" $ do
+    it "returns the number of sides of a die" $ do
+      sides D4 `shouldBe` 4
+      sides D6 `shouldBe` 6
+      sides D8 `shouldBe` 8
+      sides D10 `shouldBe` 10
+      sides D12 `shouldBe` 12
+      sides D20 `shouldBe` 20
+      sides D100 `shouldBe` 100
+
   describe "range" $ do
     it "returns the range of a die" $ do
       range ((fromJust . die) "d4") `shouldBe` (1, 4)
