@@ -8,10 +8,20 @@
 -}
 module HighRoller.Gaming
   (
+    -- * Data types
     Die,
-    die
+    die,
+
+    -- * Properties
+    range,
+
+    -- * Rolling
+    roll,
+    rollIO,
+    rollMaybeIO,
   ) where
 
+import System.Random (RandomGen, newStdGen, randomR)
 import Text.Read (readMaybe)
 
 -- | A multi-sided gaming die.
@@ -48,3 +58,50 @@ readDie _      = []
 -- a @Die@.
 die :: String -> Maybe Die
 die = readMaybe
+
+-- Use `sequence` to parse multiple dice, e.g., 2d4
+
+-- | Closed interval of possible rolls for a given die.
+range :: Die -> (Int, Int)
+range D4   = (1, 4)
+range D6   = (1, 6)
+range D8   = (1, 8)
+range D10  = (1, 10)
+range D12  = (1, 12)
+range D20  = (1, 20)
+range D100 = (1, 100)
+
+-- | Simulates a dice roll and returns the result.
+roll
+  :: RandomGen g
+  => Die           -- ^ Die being rolled
+  -> g             -- ^ Random number source
+  -> (Int, g)      -- ^ Result of the random dice roll and the random number source
+roll = randomR . range
+
+-- | Simulates a random die roll and returns the result.
+--
+-- Unlike 'roll', this function will select the source of randomnness for you,
+-- using 'newStdGen', and return only the value that was rolled on the die.
+--
+-- This is a useful function for use in the ghci REPL but probably not of
+-- great use outside of it; 'roll' should be preferred.
+rollIO :: Die -> IO Int
+rollIO d = do
+  g <- newStdGen
+  return $ fst $ roll d g
+
+-- | Parses the description of a die, rolls it, and returns the result.
+--
+-- The description of the dice is parsed using 'die' and should be in a
+-- form like "d4", "d12", etc. The die is rolled using 'rollIO' and the
+-- resulting value is returned. If the description of the die cannot be
+-- parsed, 'Nothing' is returned.
+--
+-- This is a useful function for use in the ghci REPL but probably not of
+-- great use outside of it; 'roll' should be preferred.
+rollMaybeIO :: String -> Maybe (IO Int)
+rollMaybeIO s = do
+  case die s of
+    Nothing -> Nothing
+    Just d  -> Just (rollIO d)
