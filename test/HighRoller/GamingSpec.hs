@@ -10,13 +10,13 @@ spec :: Spec
 spec = do
   describe "die" $ do
     it "parses a valid die description" $ do
-      (show . fromJust . die) "d4" `shouldBe` "d4"
-      (show . fromJust . die) "d6" `shouldBe` "d6"
-      (show . fromJust . die) "d8" `shouldBe` "d8"
-      (show . fromJust . die) "d10" `shouldBe` "d10"
-      (show . fromJust . die) "d12" `shouldBe` "d12"
-      (show . fromJust . die) "d20" `shouldBe` "d20"
-      (show . fromJust . die) "d100" `shouldBe` "d100"
+      (fromJust . die) "d4" `shouldBe` D4
+      (fromJust . die) "d6" `shouldBe` D6
+      (fromJust . die) "d8" `shouldBe` D8
+      (fromJust . die) "d10" `shouldBe` D10
+      (fromJust . die) "d12" `shouldBe` D12
+      (fromJust . die) "d20" `shouldBe` D20
+      (fromJust . die) "d100" `shouldBe` D100
 
     it "returns nothing if a die description is not valid" $ do
       (isNothing . die) "" `shouldBe` True
@@ -35,13 +35,13 @@ spec = do
 
   describe "range" $ do
     it "returns the range of a die" $ do
-      range ((fromJust . die) "d4") `shouldBe` (1, 4)
-      range ((fromJust . die) "d6") `shouldBe` (1, 6)
-      range ((fromJust . die) "d8") `shouldBe` (1, 8)
-      range ((fromJust . die) "d10") `shouldBe` (1, 10)
-      range ((fromJust . die) "d12") `shouldBe` (1, 12)
-      range ((fromJust . die) "d20") `shouldBe` (1, 20)
-      range ((fromJust . die) "d100") `shouldBe` (1, 100)
+      range D4 `shouldBe` (1, 4)
+      range D6 `shouldBe` (1, 6)
+      range D8 `shouldBe` (1, 8)
+      range D10 `shouldBe` (1, 10)
+      range D12 `shouldBe` (1, 12)
+      range D20 `shouldBe` (1, 20)
+      range D100 `shouldBe` (1, 100)
 
   describe "replicateDie" $ do
     it "replicates a die" $ do
@@ -90,7 +90,7 @@ spec = do
 
   describe "rollIO" $ do
     it "generates a random die roll" $ do
-      result <- rollIO ((fromJust . die) "d20")
+      result <- rollIO D20
       result > 0 `shouldBe` True
 
   describe "rollMaybeIO" $ do
@@ -114,7 +114,7 @@ spec = do
            let (n, d) = fromJust res
             in do
               n `shouldBe` 2
-              show d `shouldBe` "d8"
+              d `shouldBe` D8
 
       it "does not parse a description with an invalid die" $ do
         isNothing (splitDice "2d9") `shouldBe` True
@@ -133,7 +133,7 @@ spec = do
            let (n, d) = fromJust res
             in do
               n `shouldBe` 1
-              show d `shouldBe` "d12"
+              d `shouldBe` D12
 
       it "does not parse an invalid description" $ do
         let res = splitDice "d19"

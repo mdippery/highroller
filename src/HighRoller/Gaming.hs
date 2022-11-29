@@ -10,7 +10,7 @@
 module HighRoller.Gaming
   (
     -- * Data types
-    Die,
+    Die(..),
     die,
 
     -- * Properties
@@ -37,6 +37,7 @@ import Text.Read (readMaybe)
 --
 -- Create a new die using 'die'.
 data Die = D4 | D6 | D8 | D10 | D12 | D20 | D100
+  deriving Eq
 
 instance Show Die where
   show D4   = "d4"
