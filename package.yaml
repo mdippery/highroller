@@ -42,6 +42,11 @@ executables:
     - -with-rtsopts=-N
     dependencies:
     - highroller
+    # Removes an hpack warning.
+    # See: <https://stackoverflow.com/a/67949236/28804>
+    when:
+    - condition: false
+      other-modules: Paths_highroller
 
 tests:
   highroller-test:
@@ -53,3 +58,4 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - highroller
+    - hspec

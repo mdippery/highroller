@@ -24,7 +24,7 @@ source-repository head
 
 library
   exposed-modules:
-      Lib
+      HighRoller.Gaming
   other-modules:
       Paths_highroller
   hs-source-dirs:
@@ -36,8 +36,6 @@ library
 
 executable roll
   main-is: Main.hs
-  other-modules:
-      Paths_highroller
   hs-source-dirs:
       app
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
@@ -50,6 +48,7 @@ test-suite highroller-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      HighRoller.GamingSpec
       Paths_highroller
   hs-source-dirs:
       test
@@ -57,4 +56,5 @@ test-suite highroller-test
   build-depends:
       base >=4.7 && <5
     , highroller
+    , hspec
   default-language: Haskell2010
