@@ -62,6 +62,16 @@ spec = do
       let result = replicateDice "blah"
        in isNothing result `shouldBe` True
 
+  describe "expected" $ do
+    it "returns the expected value of a die" $ do
+      expected D4 `shouldBe` 2.5
+      expected D6 `shouldBe` 3.5
+      expected D8 `shouldBe` 4.5
+      expected D10 `shouldBe` 5.5
+      expected D12 `shouldBe` 6.5
+      expected D20 `shouldBe` 10.5
+      expected D100 `shouldBe` 50.5
+
   describe "roll" $ do
     it "generates a random die roll" $ do
       let g = mkStdGen 11051981

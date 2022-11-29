@@ -14,6 +14,7 @@ module HighRoller.Gaming
 
     -- * Properties
     range,
+    expected,
 
     -- * Rolling
     roll,
@@ -111,6 +112,14 @@ replicateDice s =
   case splitDice s of
     Just (n, d) -> Just (replicateDie n d)
     Nothing     -> Nothing
+
+-- | Expected value of a given die roll.
+--
+-- This is not simulated but instead is calculated arithmetically.
+expected :: Fractional a => Die -> a
+expected d =
+  let (lb, ub) = range d
+   in (fromIntegral lb + fromIntegral ub) / 2
 
 -- | Closed interval of possible rolls for a given die.
 range :: Die -> (Int, Int)
