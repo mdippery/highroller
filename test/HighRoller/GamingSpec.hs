@@ -55,3 +55,42 @@ spec = do
     it "returns Nothing when given an invalid die description" $ do
       let result = rollMaybeIO "d19"
        in isNothing result `shouldBe` True
+
+  describe "splitDice" $ do
+    describe "multiple dice" $ do
+      it "parses a valid description" $ do
+        let res = splitDice "2d8"
+         in do
+           isJust res `shouldBe` True
+           let (n, d) = fromJust res
+            in do
+              n `shouldBe` 2
+              show d `shouldBe` "d8"
+
+      it "does not parse a description with an invalid die" $ do
+        isNothing (splitDice "2d9") `shouldBe` True
+
+      it "does not parse a description with an invalid count" $ do
+        isNothing (splitDice "zd8") `shouldBe` True
+
+      it "does not parse a description with a negative count" $ do
+        isNothing (splitDice "-2d8") `shouldBe` True
+
+    describe "single die" $ do
+      it "parses a valid description" $ do
+        let res = splitDice "d12"
+         in do
+           isJust res `shouldBe` True
+           let (n, d) = fromJust res
+            in do
+              n `shouldBe` 1
+              show d `shouldBe` "d12"
+
+      it "does not parse an invalid description" $ do
+        let res = splitDice "d19"
+         in isNothing res `shouldBe` True
+
+    describe "invalid description" $ do
+      it "does not parse an invalid description" $ do
+        let res = splitDice "blah"
+         in isNothing res `shouldBe` True

@@ -19,8 +19,12 @@ module HighRoller.Gaming
     roll,
     rollIO,
     rollMaybeIO,
+
+    -- * Utilities
+    splitDice,
   ) where
 
+import Data.List.Split (splitOn)
 import System.Random (RandomGen, newStdGen, randomR)
 import Text.Read (readMaybe)
 
@@ -60,6 +64,33 @@ die :: String -> Maybe Die
 die = readMaybe
 
 -- Use `sequence` to parse multiple dice, e.g., 2d4
+
+-- | Parses a description of multiple dice into the 2-tuple
+-- (number of dice, die).
+--
+-- Descriptions such as "2d20" will return the value (2, d20). A simple
+-- description like "d20" will return (1, d20). Invalid descriptions will
+-- return 'Nothing'.
+splitDice :: String -> Maybe (Int, Die)
+splitDice s =
+  case splitOn "d" s of
+    [n, d] ->
+      case n of
+        "" ->
+          case die ('d':d) of
+            Just d' -> Just (1, d')
+            Nothing -> Nothing
+        _  ->
+          case die ('d':d) of
+            Just d' ->
+              case readMaybe n of
+                Just n' ->
+                  if n' > 0
+                     then Just (n', d')
+                     else Nothing
+                Nothing -> Nothing
+            Nothing -> Nothing
+    _      -> Nothing
 
 -- | Closed interval of possible rolls for a given die.
 range :: Die -> (Int, Int)

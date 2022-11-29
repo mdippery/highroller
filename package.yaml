@@ -33,6 +33,7 @@ library:
   source-dirs: src
   dependencies:
   - random
+  - split
 
 executables:
   roll:
