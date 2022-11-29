@@ -21,6 +21,8 @@ module HighRoller.Gaming
     rollMaybeIO,
 
     -- * Utilities
+    replicateDie,
+    replicateDice,
     splitDice,
   ) where
 
@@ -91,6 +93,24 @@ splitDice s =
                 Nothing -> Nothing
             Nothing -> Nothing
     _      -> Nothing
+
+-- | Copies the second value into a list of the given length.
+--
+-- In conjunction with 'replicateDice`, this is useful to turn a description
+-- like "2d20" into a list of dice.
+replicateDie :: Int -> Die -> [Die]
+replicateDie = replicate
+
+-- | Turns a description of a dice roll into a list of dice.
+--
+-- The description is a standard string like "2d20" that can be parsed by
+-- 'splitDice' and then turned into a list of individual dice using
+-- 'replicateDie'.
+replicateDice :: String -> Maybe [Die]
+replicateDice s =
+  case splitDice s of
+    Just (n, d) -> Just (replicateDie n d)
+    Nothing     -> Nothing
 
 -- | Closed interval of possible rolls for a given die.
 range :: Die -> (Int, Int)

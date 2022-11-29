@@ -33,6 +33,35 @@ spec = do
       range ((fromJust . die) "d20") `shouldBe` (1, 20)
       range ((fromJust . die) "d100") `shouldBe` (1, 100)
 
+  describe "replicateDie" $ do
+    it "replicates a die" $ do
+      replicateDie 4 D4 `shouldBe` [D4, D4, D4, D4]
+
+  describe "replicateDice" $ do
+    it "replicates a description of a single die" $ do
+      let result = replicateDice "d10"
+       in do
+         isJust result `shouldBe` True
+         fromJust result `shouldBe` [D10]
+
+    it "replicates a description of multiple dice" $ do
+      let result = replicateDice "3d10"
+       in do
+         isJust result `shouldBe` True
+         fromJust result `shouldBe` [D10, D10, D10]
+
+    it "does not replicate a description of a single invalid die" $ do
+      let result = replicateDice "d19"
+       in isNothing result `shouldBe` True
+
+    it "does not replicate a description of multiple invalid dice" $ do
+      let result = replicateDice "3d9"
+       in isNothing result `shouldBe` True
+
+    it "does not replicate an invalid description" $ do
+      let result = replicateDice "blah"
+       in isNothing result `shouldBe` True
+
   describe "roll" $ do
     it "generates a random die roll" $ do
       let g = mkStdGen 11051981
