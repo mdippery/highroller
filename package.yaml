@@ -1,0 +1,55 @@
+name:                highroller
+version:             0.1.0.0
+github:              "mdippery/highroller"
+#license:             
+#license-file? should be generated in .cabal file
+author:              "Michael Dippery"
+maintainer:          "michael@monkey-robot.com"
+copyright:           "2022 Michael Dippery"
+
+extra-source-files:
+- README.md
+
+synopsis:            Calculate results of dice rolls for D20 systems
+category:            Game
+
+description:         Please see the README on GitHub at <https://github.com/mdippery/highroller#readme>
+
+dependencies:
+- base >= 4.7 && < 5
+
+ghc-options:
+- -Wall
+- -Wcompat
+- -Widentities
+- -Wincomplete-record-updates
+- -Wincomplete-uni-patterns
+- -Wmissing-export-lists
+- -Wmissing-home-modules
+- -Wpartial-fields
+- -Wredundant-constraints
+
+library:
+  source-dirs: src
+
+executables:
+  roll:
+    main:                Main.hs
+    source-dirs:         app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - highroller
+
+tests:
+  highroller-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - highroller
