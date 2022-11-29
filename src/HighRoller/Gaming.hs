@@ -1,6 +1,7 @@
 {-|
   Module      : HighRoller.Gaming
   Description : Data types and functions for gaming dice
+  Copyright   : (C) 2022 Michael Dippery
   License     : ?
   Maintainer  : michael@monkey-robot.com
 
