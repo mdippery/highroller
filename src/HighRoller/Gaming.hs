@@ -79,7 +79,7 @@ readDie "d20"  = [(D20, "")]
 readDie "d100" = [(D100, "")]
 readDie _      = []
 
--- | Parses a standard description of a die into a 'Die'.
+-- | Parse a standard description of a die into a 'Die'.
 --
 -- A valid string such as "d4", "d6", etc., will return the corresponding
 -- @Die@. 'Nothing' will be returned if the string cannot be parsed into
@@ -87,7 +87,7 @@ readDie _      = []
 die :: String -> Maybe Die
 die = readMaybe
 
--- | Parses a potential rollable value into a 'Rollable'.
+-- | Parse a potential rollable value into a 'Rollable'.
 rollable :: String -> Maybe Rollable
 rollable s =
   case die s of
@@ -97,7 +97,7 @@ rollable s =
         Just n  -> Just (RollableInt n)
         Nothing -> Nothing
 
--- | Parses a rollable of multiple identical dice into a list of parsed
+-- | Parse a rollable of multiple identical dice into a list of parsed
 -- 'Rollable' items.
 --
 -- For example, "2d10" will return a list consisting of two 'RollableDie'
@@ -111,9 +111,7 @@ rollableMulti s =
         Just n  -> [(Just . RollableInt) n]
         Nothing -> [Nothing]
 
--- Use `sequence` to parse multiple dice, e.g., 2d4
-
--- | Parses a description of multiple dice into the 2-tuple
+-- | Parse a description of multiple dice into the 2-tuple
 -- (number of dice, die).
 --
 -- Descriptions such as "2d20" will return the value (2, d20). A simple
@@ -140,14 +138,19 @@ splitDice s =
             Nothing -> Nothing
     _      -> Nothing
 
--- | Copies the second value into a list of the given length.
+-- | Make /n/ copies of the given die.
 --
 -- In conjunction with 'replicateDice`, this is useful to turn a description
 -- like "2d20" into a list of dice.
+--
+-- ==== __Examples__
+--
+-- >>> replicateDie 3 D20
+-- [D20, D20, D20]
 replicateDie :: Int -> Die -> [Die]
 replicateDie = replicate
 
--- | Turns a description of a dice roll into a list of dice.
+-- | Turn a description of a dice roll into a list of dice.
 --
 -- The description is a standard string like "2d20" that can be parsed by
 -- 'splitDice' and then turned into a list of individual dice using
@@ -183,15 +186,14 @@ range = ((,) 1) . sides
 delete :: Char -> String -> String
 delete ch = filter (/= ch)
 
--- | Separates a string representing a roll into individual strings
+-- | Separate a string representing a roll into individual strings
 -- representing each rollable item in that roll.
 --
 -- Returned items are not guaranteed to be convertible into a 'Rollable'.
 parseRoll :: String -> [String]
 parseRoll = splitOn "+" . delete ' '
 
--- | Parses a description of a roll and turns it into a list of 'Rollable'
--- items.
+-- | Parse a description of a roll into a list of 'Rollable' items.
 --
 -- ==== __Examples__
 -- >>> splitRoll "d10"
@@ -207,7 +209,7 @@ parseRoll = splitOn "+" . delete ' '
 splitRoll :: String -> Maybe [Rollable]
 splitRoll = sequence . concat . map rollableMulti . parseRoll
 
--- | Simulates roll and returns the result.
+-- | Simulate roll and return the result.
 roll
   :: RandomGen g
   => Rollable   -- ^ Thing to be rolled
@@ -216,7 +218,7 @@ roll
 roll (RollableDie d) g = randomR (range d) g
 roll (RollableInt n) g = (n, g)
 
--- | Simulates a roll of a die /n/ times and returns the total.
+-- | Simulate a roll of a die /n/ times and return the total.
 rollDice
   :: RandomGen g
   => Int    -- ^ Number of times to roll the dice
@@ -225,7 +227,7 @@ rollDice
   -> Int    -- ^ Total result of all /n/ rolls
 rollDice = ((sum .) .) . rollEach
 
--- | Simulates a roll of a die /n/ times and returns each individual result.
+-- | Simulate a roll of a die /n/ times and return each individual result.
 rollEach
   :: RandomGen g
   => Int    -- ^ Number of times to roll the die
@@ -239,7 +241,7 @@ rollEach n d g = fst $ foldr go ([], g) $ replicateDie n d
       let (v, g'') = roll (RollableDie d') g'
        in (v : ls, g'')
 
--- | Simulates rolling a sequence of dice and returns the total.
+-- | Simulate rolling a sequence of dice and return the total.
 rollMulti
   :: RandomGen g
   => [Rollable]   -- ^ Dice being rolled
@@ -247,7 +249,7 @@ rollMulti
   -> Int          -- ^ Total result of roll
 rollMulti rs g = sum $ rollEachMulti rs g
 
--- | Simulates rolling a sequence of dice and returns each individual
+-- | Simulate rolling a sequence of dice and return each individual
 -- result.
 rollEachMulti
   :: RandomGen g
@@ -261,7 +263,7 @@ rollEachMulti rs g = fst $ foldr go ([], g) rs
       let (v, g'') = roll r g'
        in (v : acc, g'')
 
--- | Simulates the roll described by the string.
+-- | Simulate the roll described by the string.
 --
 -- The string can be a simple description like "d8" or "2d10", or a more
 -- complex description like "2d8 + 1d10 + 4". It can even be a simple
@@ -278,7 +280,7 @@ rollDesc s g =
     Just vals -> Just $ rollMulti vals g
     Nothing   -> Nothing
 
--- | Simulates a random die roll and returns the result.
+-- | Simulate a random die roll and return the result.
 --
 -- Unlike 'roll', this function will select the source of randomnness for you,
 -- using 'newStdGen', and return only the value that was rolled on the die.
@@ -290,7 +292,7 @@ rollIO d = do
   g <- newStdGen
   return $ fst $ roll (RollableDie d) g
 
--- | Parses the description of a die, rolls it, and returns the result.
+-- | Parse the description of a die, roll it, and return the result.
 --
 -- The description of the dice is parsed using 'die' and should be in a
 -- form like "d4", "d12", etc. The die is rolled using 'rollIO' and the
