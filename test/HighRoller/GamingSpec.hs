@@ -103,6 +103,31 @@ spec = do
       let g = mkStdGen 11051981
        in rollEach 10 D10 g `shouldBe` [3,10,3,1,8,8,8,2,5,6]
 
+  describe "rollMulti" $ do
+    it "simulates a single dice roll and returns the total" $ do
+      let g    = mkStdGen 11051981
+          vals = fromJust $ splitRoll "d4"
+          res  = rollMulti vals g
+       in res `shouldBe` 2
+
+    it "simulates a roll of multiple dice and returns the total" $ do
+      let g    = mkStdGen 11051981
+          vals = fromJust $ splitRoll "2d10"
+          res  = rollMulti vals g
+       in res `shouldBe` 11
+
+    it "simulates a constant roll and returns the total" $ do
+      let g    = mkStdGen 11051981
+          vals = fromJust $ splitRoll "9"
+          res  = rollMulti vals g
+       in res `shouldBe` 9
+
+    it "simulates a complex dice roll and returns the total" $ do
+      let g    = mkStdGen 11051981
+          vals = fromJust $ splitRoll "2d10 + d4 + 8"
+          res  = rollMulti vals g
+       in res `shouldBe` 17
+
   describe "rollEachMulti" $ do
     it "simulates a single dice roll and returns each result" $ do
       let g    = mkStdGen 11051981

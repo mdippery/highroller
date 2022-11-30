@@ -26,6 +26,7 @@ module HighRoller.Gaming
     roll,
     rollDice,
     rollEach,
+    rollMulti,
     rollEachMulti,
     rollIO,
     rollMaybeIO,
@@ -237,6 +238,13 @@ rollEach n d g = fst $ foldr go ([], g) $ replicateDie n d
       let (v, g'') = roll (RollableDie d') g'
        in (v : ls, g'')
 
+-- | Simulates rolling a sequence of dice and returns the total.
+rollMulti
+  :: RandomGen g
+  => [Rollable]   -- ^ Dice being rolled
+  -> g            -- ^ Random number source
+  -> Int          -- ^ Total result of roll
+rollMulti rs g = sum $ rollEachMulti rs g
 
 -- | Simulates rolling a sequence of dice and returns each individual
 -- result.
