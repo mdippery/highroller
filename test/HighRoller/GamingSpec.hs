@@ -88,6 +88,11 @@ spec = do
           (result, _) = roll ((fromJust . die) "d20") g
        in result `shouldBe` 5
 
+  describe "rollN" $ do
+    it "rolls a handful of identical dice and returns the total" $ do
+      let g = mkStdGen 11051981
+       in rollN 10 D10 g `shouldBe` 54
+
   describe "rollEach" $ do
     it "simulates dice rolls and returns each result" $ do
       let g = mkStdGen 11051981
