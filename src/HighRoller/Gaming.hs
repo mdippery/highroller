@@ -30,10 +30,11 @@ module HighRoller.Gaming
     rollMaybeIO,
 
     -- * Utilities
-    parseRoll,
     replicateDie,
     replicateDice,
     splitDice,
+    parseRoll,
+    splitRoll,
   ) where
 
 import Data.List.Split (splitOn)
@@ -185,6 +186,23 @@ delete ch = filter (/= ch)
 -- Returned items are not guaranteed to be convertible into a 'Rollable'.
 parseRoll :: String -> [String]
 parseRoll = splitOn "+" . delete ' '
+
+-- | Parses a description of a roll and turns it into a list of 'Rollable'
+-- items.
+--
+-- ==== __Examples__
+-- >>> splitRoll "d10"
+-- Just [RollableDie d10]
+-- >>> splitRoll "2d10"
+-- Just [RollableDie d10,RollableDie d10]
+-- >>> splitRoll "2d10 + 9"
+-- Just [RollableDie d10,RollableDie d10,RollableInt 9]
+-- >>> splitRoll "2d10 + d9"
+-- Nothing
+-- >>> splitRoll "2d10 +"
+-- Nothing
+splitRoll :: String -> Maybe [Rollable]
+splitRoll = sequence . concat . map rollableMulti . parseRoll
 
 -- | Simulates roll and returns the result.
 roll

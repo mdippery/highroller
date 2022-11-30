@@ -161,6 +161,34 @@ spec = do
     it "parses the description of a roll" $ do
       parseRoll "2d10 + d8 + 9" `shouldBe` ["2d10", "d8", "9"]
 
+  describe "splitRoll" $ do
+    it "parses a single dice roll" $ do
+      splitRoll "d10" `shouldBe` Just [RollableDie D10]
+
+    it "parses a multi-dice roll" $ do
+      splitRoll "2d10" `shouldBe` Just [RollableDie D10, RollableDie D10]
+
+    it "parses a multi-dice roll with a constant" $ do
+      splitRoll "2d10 + 9" `shouldBe` Just [RollableDie D10, RollableDie D10, RollableInt 9]
+
+    it "parses a complex dice roll with a constant" $ do
+      splitRoll "2d10 + d4 + 9" `shouldBe` Just [RollableDie D10, RollableDie D10, RollableDie D4, RollableInt 9]
+
+    it "does not parse a roll with an invalid dice" $ do
+      splitRoll "2d10 + d4 + d9" `shouldBe` Nothing
+
+    it "does not parse a roll with missing components" $ do
+      splitRoll "2d10 +" `shouldBe` Nothing
+
+    it "does not parse a roll with a negative sign" $ do
+      splitRoll "2d10 - 2" `shouldBe` Nothing
+
+    it "does not parse an invalid roll" $ do
+      splitRoll "blah" `shouldBe` Nothing
+
+    it "does not parse an empty roll" $ do
+      splitRoll "" `shouldBe` Nothing
+
   describe "Rollable" $ do
     describe "rollable" $ do
       it "creates a Rollable Die from a valid string" $ do
