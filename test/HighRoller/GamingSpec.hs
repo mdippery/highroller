@@ -157,6 +157,10 @@ spec = do
         let res = splitDice "blah"
          in isNothing res `shouldBe` True
 
+  describe "parseRoll" $ do
+    it "parses the description of a roll" $ do
+      parseRoll "2d10 + d8 + 9" `shouldBe` ["2d10", "d8", "9"]
+
   describe "Rollable" $ do
     describe "rollable" $ do
       it "creates a Rollable Die from a valid string" $ do

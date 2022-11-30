@@ -29,6 +29,7 @@ module HighRoller.Gaming
     rollMaybeIO,
 
     -- * Utilities
+    parseRoll,
     replicateDie,
     replicateDice,
     splitDice,
@@ -159,6 +160,16 @@ sides = read . tail . show
 -- | Closed interval of possible rolls for a given die.
 range :: Die -> (Int, Int)
 range = ((,) 1) . sides
+
+delete :: Char -> String -> String
+delete ch = filter (/= ch)
+
+-- | Separates a string representing a roll into individual strings
+-- representing each rollable item in that roll.
+--
+-- Returned items are not guaranteed to be convertible into a 'Rollable'.
+parseRoll :: String -> [String]
+parseRoll = splitOn "+" . delete ' '
 
 -- | Simulates roll and returns the result.
 roll
