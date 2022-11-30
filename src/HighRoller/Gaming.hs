@@ -140,8 +140,8 @@ replicateDice s =
 -- This is not simulated but instead is calculated arithmetically.
 expected :: Fractional a => Die -> a
 expected d =
-  let (lb, ub) = range d
-   in (fromIntegral lb + fromIntegral ub) / 2
+  let (lo, hi) = range d
+   in (fromIntegral lo + fromIntegral hi) / 2
 
 -- | Expected value of /n/ rolls of a given die.
 --
