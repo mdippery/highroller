@@ -17,6 +17,7 @@ module HighRoller.Gaming
     sides,
     range,
     expected,
+    expectedN,
 
     -- * Rolling
     roll,
@@ -125,6 +126,12 @@ expected :: Fractional a => Die -> a
 expected d =
   let (lb, ub) = range d
    in (fromIntegral lb + fromIntegral ub) / 2
+
+-- | Expected value of /n/ rolls of a given die.
+--
+-- This is not simulated but instead is calculated arithmetically.
+expectedN :: Fractional a => Int -> Die -> a
+expectedN n d = sum $ map expected $ replicateDie n d
 
 -- | Number of sides of a given die.
 sides :: Die -> Int

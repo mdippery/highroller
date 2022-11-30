@@ -82,6 +82,17 @@ spec = do
       expected D20 `shouldBe` 10.5
       expected D100 `shouldBe` 50.5
 
+  describe "expectedN" $ do
+    it "returns the expected value of multiple identical dice" $ do
+      expectedN 5 D4 `shouldBe` 12.5
+      expectedN 10 D10 `shouldBe` 55.0
+      expectedN 8 D6 `shouldBe` 28.0
+      expectedN 9 D8 `shouldBe` 40.5
+      expectedN 4 D10 `shouldBe` 22.0
+      expectedN 10 D12 `shouldBe` 65.0
+      expectedN 5 D20 `shouldBe` 52.5
+      expectedN 6 D100 `shouldBe` 303.0
+
   describe "roll" $ do
     it "generates a random die roll" $ do
       let g = mkStdGen 11051981
