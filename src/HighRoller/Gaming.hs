@@ -203,8 +203,10 @@ rollIO d = do
 --
 -- This is a useful function for use in the ghci REPL but probably not of
 -- great use outside of it; 'roll' should be preferred.
-rollMaybeIO :: String -> Maybe (IO Int)
+rollMaybeIO :: String -> IO (Maybe Int)
 rollMaybeIO s = do
   case die s of
-    Nothing -> Nothing
-    Just d  -> Just (rollIO d)
+    Nothing -> return Nothing
+    Just d  -> do
+      n <- rollIO d
+      return $ Just n

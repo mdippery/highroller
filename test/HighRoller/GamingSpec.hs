@@ -110,15 +110,13 @@ spec = do
 
   describe "rollMaybeIO" $ do
     it "generates a random die roll when given a valid die description" $ do
-      let result = rollMaybeIO "d20"
-       in do
-         isJust result `shouldBe` True
-         result' <- fromJust result
-         result' > 0 `shouldBe` True
+      result <- rollMaybeIO "d20"
+      isJust result `shouldBe` True
+      fromJust result > 0 `shouldBe` True
 
     it "returns Nothing when given an invalid die description" $ do
-      let result = rollMaybeIO "d19"
-       in isNothing result `shouldBe` True
+      result <- rollMaybeIO "d19"
+      isNothing result `shouldBe` True
 
   describe "splitDice" $ do
     describe "multiple dice" $ do
