@@ -28,6 +28,7 @@ module HighRoller.Gaming
     rollEach,
     rollMulti,
     rollEachMulti,
+    rollDesc,
     rollIO,
     rollMaybeIO,
 
@@ -259,6 +260,23 @@ rollEachMulti rs g = fst $ foldr go ([], g) rs
     go r (acc, g') =
       let (v, g'') = roll r g'
        in (v : acc, g'')
+
+-- | Simulates the roll described by the string.
+--
+-- The string can be a simple description like "d8" or "2d10", or a more
+-- complex description like "2d8 + 1d10 + 4". It can even be a simple
+-- constant like "9".
+--
+-- If the string does not describe a valid roll, 'Nothing' is returned.
+rollDesc
+  :: RandomGen g
+  => String       -- ^ A description of a dice roll
+  -> g            -- ^ Random number source
+  -> Maybe Int    -- ^ Result of the dice roll if the description is valid
+rollDesc s g =
+  case splitRoll s of
+    Just vals -> Just $ rollMulti vals g
+    Nothing   -> Nothing
 
 -- | Simulates a random die roll and returns the result.
 --

@@ -272,6 +272,39 @@ spec = do
         let res = rollableMulti "d9"
          in res `shouldBe` [Nothing]
 
+    describe "rollDesc" $ do
+      it "rolls a single-die description" $ do
+        let g = mkStdGen 11051981
+         in fromJust (rollDesc "d10" g) `shouldBe` 6
+
+      it "rolls a multi-dice description" $ do
+        let g = mkStdGen 11051981
+         in fromJust (rollDesc "4d4" g) `shouldBe` 7
+
+      it "rolls a complex description" $ do
+        let g = mkStdGen 11051981
+         in fromJust (rollDesc "2d10 + d8 + 7" g) `shouldBe` 20
+
+      it "rolls a constant description" $ do
+        let g = mkStdGen 11051981
+         in fromJust (rollDesc "9" g) `shouldBe` 9
+
+      it "rejects a description with invalid dice" $ do
+        let g = mkStdGen 11051981
+         in isNothing (rollDesc "2d10 + d9 + 4" g) `shouldBe` True
+
+      it "rejects a description with missing components" $ do
+        let g = mkStdGen 11051981
+         in isNothing (rollDesc "2d10 + d4 +" g) `shouldBe` True
+
+      it "rejects a description with negative values" $ do
+        let g = mkStdGen 11051981
+         in isNothing (rollDesc "2d10 - 1" g) `shouldBe` True
+
+      it "rejects an empty description" $ do
+        let g = mkStdGen 11051981
+         in isNothing (rollDesc "" g) `shouldBe` True
+
     describe "Rollable Die" $ do
       describe "roll" $ do
         it "generates a random die roll" $ do
