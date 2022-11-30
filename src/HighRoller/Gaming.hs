@@ -10,6 +10,7 @@
 module HighRoller.Gaming
   (
     -- * Data types
+    Rollable(..),
     Die(..),
     die,
 
@@ -20,8 +21,7 @@ module HighRoller.Gaming
     expectedN,
 
     -- * Rolling
-    roll,
-    rollN,
+    rollDice,
     rollEach,
     rollIO,
     rollMaybeIO,
@@ -35,6 +35,16 @@ module HighRoller.Gaming
 import Data.List.Split (splitOn)
 import System.Random (RandomGen, newStdGen, randomR)
 import Text.Read (readMaybe)
+
+-- | A thing that can be "rolled" to produce a "random" result, like a
+-- gaming die in real life.
+class Rollable a where
+  -- | Simulates roll and returns the result.
+  roll
+    :: RandomGen g
+    => a          -- ^ Thing to be rolled
+    -> g          -- ^ Random number source
+    -> (Int, g)   -- ^ Result of the random dice roll and the random number source
 
 -- | A multi-sided gaming die.
 --
@@ -53,6 +63,12 @@ instance Show Die where
 
 instance Read Die where
   readsPrec _ = readDie
+
+instance Rollable Die where
+  roll = randomR . range
+
+instance Rollable Int where
+  roll = (,)
 
 readDie :: String -> [(Die, String)]
 readDie "d4"   = [(D4, "")]
@@ -141,22 +157,14 @@ sides = read . tail . show
 range :: Die -> (Int, Int)
 range = ((,) 1) . sides
 
--- | Simulates a dice roll and returns the result.
-roll
-  :: RandomGen g
-  => Die           -- ^ Type of die to roll
-  -> g             -- ^ Random number source
-  -> (Int, g)      -- ^ Result of the random dice roll and the random number source
-roll = randomR . range
-
 -- | Simulates a roll of a die /n/ times and returns the total.
-rollN
+rollDice
   :: RandomGen g
   => Int    -- ^ Number of times to roll the dice
   -> Die    -- ^ Type of die to roll
   -> g      -- ^ Random number source
   -> Int    -- ^ Total result of all /n/ rolls
-rollN = ((sum .) .) . rollEach
+rollDice = ((sum .) .) . rollEach
 
 -- | Simulates a roll of a die /n/ times and returns each individual result.
 rollEach

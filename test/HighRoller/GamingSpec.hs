@@ -93,16 +93,10 @@ spec = do
       expectedN 5 D20 `shouldBe` 52.5
       expectedN 6 D100 `shouldBe` 303.0
 
-  describe "roll" $ do
-    it "generates a random die roll" $ do
-      let g = mkStdGen 11051981
-          (result, _) = roll ((fromJust . die) "d20") g
-       in result `shouldBe` 5
-
-  describe "rollN" $ do
+  describe "rollDice" $ do
     it "rolls a handful of identical dice and returns the total" $ do
       let g = mkStdGen 11051981
-       in rollN 10 D10 g `shouldBe` 54
+       in rollDice 10 D10 g `shouldBe` 54
 
   describe "rollEach" $ do
     it "simulates dice rolls and returns each result" $ do
@@ -164,3 +158,21 @@ spec = do
       it "does not parse an invalid description" $ do
         let res = splitDice "blah"
          in isNothing res `shouldBe` True
+
+  describe "Rollable" $ do
+    describe "Die Rollable" $ do
+      describe "roll" $ do
+        it "generates a random die roll" $ do
+          let g = mkStdGen 11051981
+              (result, _) = roll D20 g
+           in result `shouldBe` 5
+
+    describe "Int Rollabe" $ do
+      describe "roll" $ do
+        it "returns its value when rolled" $ do
+          let g = mkStdGen 11051981
+              (result', g') = roll (8 :: Int) g
+              (result'', _) = roll (8 :: Int) g'
+           in do
+             result' `shouldBe` 8
+             result'' `shouldBe` 8
