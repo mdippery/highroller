@@ -279,6 +279,10 @@ spec = do
               (result, _) = roll (RollableDie D20) g
            in result `shouldBe` 5
 
+      describe "show" $ do
+        it "has a string representation" $ do
+          show (RollableDie D20) `shouldBe` "RollableDie d20"
+
     describe "Rollable Int" $ do
       describe "roll" $ do
         it "returns its value when rolled" $ do
@@ -288,3 +292,7 @@ spec = do
            in do
              result' `shouldBe` 8
              result'' `shouldBe` 8
+
+      describe "show" $ do
+        it "has a string representation" $ do
+          show (RollableInt 9) `shouldBe` "RollableInt 9"
