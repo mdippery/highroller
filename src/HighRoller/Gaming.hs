@@ -20,6 +20,7 @@ module HighRoller.Gaming
 
     -- * Rolling
     roll,
+    rollEach,
     rollIO,
     rollMaybeIO,
 
@@ -139,6 +140,22 @@ roll
   -> g             -- ^ Random number source
   -> (Int, g)      -- ^ Result of the random dice roll and the random number source
 roll = randomR . range
+
+-- | Simulates a roll of a die /n/ times and returns each individual result.
+rollEach
+  :: RandomGen g
+  => Int    -- ^ Number of times to roll the die
+  -> Die    -- ^ Die being rolled
+  -> g      -- ^ Random number source
+  -> [Int]  -- ^ Result of each individual dice roll
+rollEach n d g = fst $ foldr go ([], g) $ replicateDie n d
+  where
+    go :: RandomGen g => Die -> ([Int], g) -> ([Int], g)
+    go d' (ls, g') =
+      let r   = roll d' g'
+          v   = fst r
+          g'' = snd r
+       in (v : ls, g'')
 
 -- | Simulates a random die roll and returns the result.
 --

@@ -88,6 +88,11 @@ spec = do
           (result, _) = roll ((fromJust . die) "d20") g
        in result `shouldBe` 5
 
+  describe "rollEach" $ do
+    it "simulates dice rolls and returns each result" $ do
+      let g = mkStdGen 11051981
+       in rollEach 10 D10 g `shouldBe` [3,10,3,1,8,8,8,2,5,6]
+
   describe "rollIO" $ do
     it "generates a random die roll" $ do
       result <- rollIO D20
