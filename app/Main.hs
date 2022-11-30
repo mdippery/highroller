@@ -1,7 +1,8 @@
 module Main (main) where
 
 import System.Environment (getArgs)
-import HighRoller.Gaming
+import System.Random (newStdGen)
+import HighRoller.Gaming hiding (expected)
 
 main :: IO ()
 main = do
@@ -9,8 +10,10 @@ main = do
   case argv of
     [desc] ->
       case splitDice desc of
-        Just (1, d) -> do
-          n <- rollIO d
-          putStrLn $ show n
-        _           -> return ()
+        Nothing     -> return ()
+        Just (n, d) -> do
+          g <- newStdGen
+          let actual = rollDice n d g
+              expected = expectedN n d :: Double
+           in putStrLn $ (show actual) ++ " (expected " ++ (show expected) ++")"
     _      -> return ()
