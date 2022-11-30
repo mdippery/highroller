@@ -13,6 +13,7 @@ module HighRoller.Gaming
     Rollable(..),
     Die(..),
     die,
+    rollable,
 
     -- * Properties
     sides,
@@ -79,6 +80,16 @@ readDie _      = []
 -- a @Die@.
 die :: String -> Maybe Die
 die = readMaybe
+
+-- | Parses a potential rollable value into a 'Rollable'.
+rollable :: String -> Maybe Rollable
+rollable s =
+  case die s of
+    Just d  -> Just (RollableDie d)
+    Nothing ->
+      case readMaybe s of
+        Just n  -> Just (RollableInt n)
+        Nothing -> Nothing
 
 -- Use `sequence` to parse multiple dice, e.g., 2d4
 

@@ -158,14 +158,29 @@ spec = do
          in isNothing res `shouldBe` True
 
   describe "Rollable" $ do
-    describe "Die Rollable" $ do
+    describe "rollable" $ do
+      it "creates a Rollable Die from a valid string" $ do
+        let (RollableDie r) = fromJust $ rollable "d12"
+         in r `shouldBe` D12
+
+      it "creates a Rollable Int from a valid string" $ do
+        let (RollableInt r) = fromJust $ rollable "9"
+         in r `shouldBe` 9
+
+      it "cannot parse an invalid string" $ do
+        isNothing (rollable "blah") `shouldBe` True
+
+      it "cannot parse a multi-dice string" $ do
+        isNothing (rollable "2d10") `shouldBe`True
+
+    describe "Rollable Die" $ do
       describe "roll" $ do
         it "generates a random die roll" $ do
           let g = mkStdGen 11051981
               (result, _) = roll (RollableDie D20) g
            in result `shouldBe` 5
 
-    describe "Int Rollabe" $ do
+    describe "Rollable Int" $ do
       describe "roll" $ do
         it "returns its value when rolled" $ do
           let g = mkStdGen 11051981
