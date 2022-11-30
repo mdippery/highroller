@@ -103,6 +103,31 @@ spec = do
       let g = mkStdGen 11051981
        in rollEach 10 D10 g `shouldBe` [3,10,3,1,8,8,8,2,5,6]
 
+  describe "rollEachMulti" $ do
+    it "simulates a single dice roll and returns each result" $ do
+      let g    = mkStdGen 11051981
+          vals = fromJust $ splitRoll "d4"
+          res  = rollEachMulti vals g
+       in res `shouldBe` [2]
+
+    it "simulates a roll of multiple dice and returns each result" $ do
+      let g    = mkStdGen 11051981
+          vals = fromJust $ splitRoll "2d10"
+          res  = rollEachMulti vals g
+       in res `shouldBe` [5,6]
+
+    it "simulates a constant roll and returns each result" $ do
+      let g    = mkStdGen 11051981
+          vals = fromJust $ splitRoll "9"
+          res  = rollEachMulti vals g
+       in res `shouldBe` [9]
+
+    it "simulates a complex dice roll and returns each result" $ do
+      let g    = mkStdGen 11051981
+          vals = fromJust $ splitRoll "2d10 + d4 + 8"
+          res  = rollEachMulti vals g
+       in res `shouldBe` [2,5,2,8]
+
   describe "rollIO" $ do
     it "generates a random die roll" $ do
       result <- rollIO D20
