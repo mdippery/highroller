@@ -14,6 +14,7 @@ module HighRoller.Gaming
     Die(..),
     die,
     rollable,
+    rollableMulti,
 
     -- * Properties
     sides,
@@ -62,7 +63,7 @@ instance Read Die where
 data Rollable
   = RollableDie Die
   | RollableInt Int
-  deriving Show
+  deriving (Eq, Show)
 
 readDie :: String -> [(Die, String)]
 readDie "d4"   = [(D4, "")]
@@ -91,6 +92,20 @@ rollable s =
       case readMaybe s of
         Just n  -> Just (RollableInt n)
         Nothing -> Nothing
+
+-- | Parses a rollable of multiple identical dice into a list of parsed
+-- 'Rollable' items.
+--
+-- For example, "2d10" will return a list consisting of two 'RollableDie'
+-- items.
+rollableMulti :: String -> [Maybe Rollable]
+rollableMulti s =
+  case splitDice s of
+    Just (n, d) -> map (Just . RollableDie) $ replicateDie n d
+    Nothing     ->
+      case readMaybe s of
+        Just n  -> [(Just . RollableInt) n]
+        Nothing -> [Nothing]
 
 -- Use `sequence` to parse multiple dice, e.g., 2d4
 

@@ -177,6 +177,23 @@ spec = do
       it "cannot parse a multi-dice string" $ do
         isNothing (rollable "2d10") `shouldBe`True
 
+    describe "rollableMulti" $ do
+      it "creates a list of rollable items from a valid multi-dice string" $ do
+        let res = rollableMulti "2d10"
+         in res `shouldBe` [Just (RollableDie D10), Just (RollableDie D10)]
+
+      it "creates a list of rollable items from dice string" $ do
+        let res = rollableMulti "d10"
+         in res `shouldBe` [Just (RollableDie D10)]
+
+      it "creates a list of rollable items from a constant" $ do
+        let res = rollableMulti "9"
+         in res `shouldBe` [Just (RollableInt 9)]
+
+      it "creates nothing from an invalid string" $ do
+        let res = rollableMulti "d9"
+         in res `shouldBe` [Nothing]
+
     describe "Rollable Die" $ do
       describe "roll" $ do
         it "generates a random die roll" $ do
