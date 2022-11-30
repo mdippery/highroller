@@ -14,6 +14,8 @@ bug-reports:    https://github.com/mdippery/highroller/issues
 author:         Michael Dippery
 maintainer:     michael@monkey-robot.com
 copyright:      2022 Michael Dippery
+license:        GPL-3
+license-file:   COPYING
 build-type:     Simple
 extra-source-files:
     README.md

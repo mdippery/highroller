@@ -1,8 +1,8 @@
 name:                highroller
 version:             0.1.0.0
 github:              "mdippery/highroller"
-#license:             
-#license-file? should be generated in .cabal file
+license:             GPL-3
+license-file:        COPYING
 author:              "Michael Dippery"
 maintainer:          "michael@monkey-robot.com"
 copyright:           "2022 Michael Dippery"

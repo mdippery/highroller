@@ -2,7 +2,7 @@
   Module      : HighRoller.Gaming
   Description : Data types and functions for gaming dice
   Copyright   : (C) 2022 Michael Dippery
-  License     : ?
+  License     : GPL-3
   Maintainer  : michael@monkey-robot.com
 
   Descriptions and behavior of standard multi-sided gaming dice.
