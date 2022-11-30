@@ -162,15 +162,15 @@ spec = do
       describe "roll" $ do
         it "generates a random die roll" $ do
           let g = mkStdGen 11051981
-              (result, _) = roll D20 g
+              (result, _) = roll (RollableDie D20) g
            in result `shouldBe` 5
 
     describe "Int Rollabe" $ do
       describe "roll" $ do
         it "returns its value when rolled" $ do
           let g = mkStdGen 11051981
-              (result', g') = roll (8 :: Int) g
-              (result'', _) = roll (8 :: Int) g'
+              (result', g') = roll (RollableInt 8) g
+              (result'', _) = roll (RollableInt 8) g'
            in do
              result' `shouldBe` 8
              result'' `shouldBe` 8

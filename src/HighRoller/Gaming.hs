@@ -21,6 +21,7 @@ module HighRoller.Gaming
     expectedN,
 
     -- * Rolling
+    roll,
     rollDice,
     rollEach,
     rollIO,
@@ -35,16 +36,6 @@ module HighRoller.Gaming
 import Data.List.Split (splitOn)
 import System.Random (RandomGen, newStdGen, randomR)
 import Text.Read (readMaybe)
-
--- | A thing that can be "rolled" to produce a "random" result, like a
--- gaming die in real life.
-class Rollable a where
-  -- | Simulates roll and returns the result.
-  roll
-    :: RandomGen g
-    => a          -- ^ Thing to be rolled
-    -> g          -- ^ Random number source
-    -> (Int, g)   -- ^ Result of the random dice roll and the random number source
 
 -- | A multi-sided gaming die.
 --
@@ -64,11 +55,12 @@ instance Show Die where
 instance Read Die where
   readsPrec _ = readDie
 
-instance Rollable Die where
-  roll = randomR . range
-
-instance Rollable Int where
-  roll = (,)
+-- | A thing that can be "rolled" to produce a "random" result, like a
+-- gaming die in real life.
+data Rollable
+  = RollableDie Die
+  | RollableInt Int
+  deriving Show
 
 readDie :: String -> [(Die, String)]
 readDie "d4"   = [(D4, "")]
@@ -157,6 +149,15 @@ sides = read . tail . show
 range :: Die -> (Int, Int)
 range = ((,) 1) . sides
 
+-- | Simulates roll and returns the result.
+roll
+  :: RandomGen g
+  => Rollable   -- ^ Thing to be rolled
+  -> g          -- ^ Random number source
+  -> (Int, g)   -- ^ Result of the random dice roll and the random number source
+roll (RollableDie d) g = randomR (range d) g
+roll (RollableInt n) g = (n, g)
+
 -- | Simulates a roll of a die /n/ times and returns the total.
 rollDice
   :: RandomGen g
@@ -177,7 +178,7 @@ rollEach n d g = fst $ foldr go ([], g) $ replicateDie n d
   where
     go :: RandomGen g => Die -> ([Int], g) -> ([Int], g)
     go d' (ls, g') =
-      let r   = roll d' g'
+      let r   = roll (RollableDie d') g'
           v   = fst r
           g'' = snd r
        in (v : ls, g'')
@@ -192,7 +193,7 @@ rollEach n d g = fst $ foldr go ([], g) $ replicateDie n d
 rollIO :: Die -> IO Int
 rollIO d = do
   g <- newStdGen
-  return $ fst $ roll d g
+  return $ fst $ roll (RollableDie d) g
 
 -- | Parses the description of a die, rolls it, and returns the result.
 --
