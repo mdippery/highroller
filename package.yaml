@@ -46,11 +46,6 @@ executables:
     dependencies:
     - highroller
     - random
-    # Removes an hpack warning.
-    # See: <https://stackoverflow.com/a/67949236/28804>
-    when:
-    - condition: false
-      other-modules: Paths_highroller
 
 tests:
   highroller-test:
